@@ -1,9 +1,9 @@
 'use strict';
 
 import PlugBot from './plug-bot';
-import config from './config';
+import PlugApi = require('./plug-api/');
+import config from './config/config';
 import winston = require('winston');
-const PlugApi = require('./plug-api/');
 
 // Setup logging
 const logger = new winston.Logger({
@@ -17,8 +17,9 @@ const logger = new winston.Logger({
 });
 
 const plugApi = new PlugApi({
-  headless: true
-  // executablePath: 'google-chrome-unstable',
-  // args: ['--no-sandbox', '--disable-setuid-sandbox']
+  headless: true,
+  executablePath: 'google-chrome-unstable',
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
 });
-const plugBot = new PlugBot(config, logger, plugApi);
+
+new PlugBot(config, logger, plugApi);

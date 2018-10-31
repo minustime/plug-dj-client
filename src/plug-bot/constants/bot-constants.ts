@@ -20,7 +20,6 @@ export default Object.freeze({
   SONG_REJECT: 'SONG_REJECT',
   ERROR: 'ERROR',
   PLUG: 'plug',
-  DUBTRACK: 'dubtrack',
   PUBSUB_CLIENT_EVENT: 'woots:client:event',
   PUBSUB_SERVER_EVENT: 'woots:server:event'
 });
