@@ -23,7 +23,7 @@
     "watch-ts": "tsc -w",
     "watch": "yarn process-js & yarn watch-ts",
     "build": "cpx ./src/plug-api/index.js dist/plug-api/ & tsc",
-    "start": "node dist"
+    "start": "source .env; node dist"
   },
   "engines": {
     "node": "10.x.x"

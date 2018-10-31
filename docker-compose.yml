@@ -6,6 +6,7 @@ services:
     env_file: 
         - .env
     environment:
+      - DOCKERIZED=true
       - REDIS_HOST=redis
   redis:
     image: redis:latest
