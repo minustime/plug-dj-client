@@ -1,13 +1,13 @@
 'use strict';
 
-import plugConstants from './plug-constants';
-import systemConstants from './constants';
+import plugConstants from './constants/plug-constants';
+import systemConstants from './constants/bot-constants';
 
 const Redis = require('redis');
 const _ = require('underscore');
 
 // Interfaces
-import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from './types';
+import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from './types/bot.types';
 
 class PlugBot {
   private sub: any;
@@ -46,6 +46,7 @@ class PlugBot {
   }
 
   private async init(username: string, password: string, roomId: string) {
+
     this.logger.log('info', 'Connecting to room: %s', roomId);
 
     // Connect to plug and the room
@@ -75,6 +76,7 @@ class PlugBot {
           // Notify 'ready'
           this.sendToServer(systemConstants.BOT_JOIN, roomSnapshot);
           this.logger.log('info', 'Connected to room: %s', roomId);
+          
         } catch (err) {
           this.logger.log('error', 'Error, could not subscribe to room events: %s', err);
         }

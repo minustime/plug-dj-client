@@ -6,3 +6,4 @@ dist
 env_make
 .DS_Store
 scrap.*
+.env

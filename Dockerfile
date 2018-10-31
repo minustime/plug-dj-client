@@ -17,7 +17,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /src/*.deb
 
-ENV NODE_VERSION 8.9.0
+ENV NODE_VERSION 10.13.0
 
 # Install Node  & Yarn
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \

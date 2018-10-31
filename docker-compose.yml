@@ -3,10 +3,9 @@ services:
   plug-dj-client:
     image: plug-dj-client
     build: .
+    env_file: 
+        - .env
     environment:
       - REDIS_HOST=redis
-      - PLUG_USERNAME=
-      - PLUG_PASSWORD=
-      - PLUG_ROOM=
   redis:
     image: redis:latest
