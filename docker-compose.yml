@@ -1,0 +1,11 @@
+version: "3"
+services:
+  woots-node-client:
+    image: woots-node-client
+    build: .
+    environment:
+      - REDIS_HOST=192.168.1.245
+      - MONGO_CONNECTION_URI=mongodb://localhost:27017/woots
+      - PLUG_USERNAME=
+      - PLUG_PASSWORD=
+      - PLUG_ROOM=

@@ -1,0 +1,33 @@
+{
+  "name": "woots-node-client",
+  "version": "0.1.2",
+  "description": "",
+  "main": "dist/index.js",
+  "private": true,
+  "dependencies": {
+    "cpx": "^1.5.0",
+    "joi": "^13.0.1",
+    "puppeteer": "^0.12.0",
+    "redis": "^2.8.0",
+    "tslib": "^1.8.0",
+    "underscore": "^1.8.3",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.14",
+    "eslint": "^4.2.0",
+    "typescript": "^2.4.1"
+  },
+  "scripts": {
+    "process-js": "cpx ./src/lib/plug-api.js dist/lib/ --watch",
+    "watch-ts": "tsc -w",
+    "watch": "yarn process-js & yarn watch-ts",
+    "build": "cpx ./src/lib/plug-api.js dist/lib/ & tsc",
+    "start": "node dist"
+  },
+  "engines": {
+    "node": "8.9.x"
+  },
+  "author": "Vic <vic@minustime.com>",
+  "license": "ISC"
+}

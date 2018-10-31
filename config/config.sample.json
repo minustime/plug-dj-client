@@ -1,0 +1,11 @@
+{
+  "plug": {
+    "username": "",
+    "password": "",
+    "room": ""
+  },
+  "redis": {
+    "host": "",
+    "port": 6379
+  }
+}
