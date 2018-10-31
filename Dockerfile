@@ -32,6 +32,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     && apt-get install -y --no-install-recommends \
     google-chrome-unstable  \
     ibpangocairo-1.0-0 \ 
+    libgconf2-4 \ 
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /src/*.deb
@@ -57,6 +58,5 @@ RUN cd ${BUILDIR} \
 
 # Copy configuration files
 COPY docker/supervisord/default.conf /etc/supervisor/conf.d/default.conf
-COPY config/config.json ${WORKDIR}/config/config.json
 
 ENTRYPOINT ["/usr/bin/supervisord"]

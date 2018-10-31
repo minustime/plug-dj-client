@@ -4,6 +4,5 @@ dist
 *.swp
 *.swo
 env_make
-config.json
 .DS_Store
 scrap.*

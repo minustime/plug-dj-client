@@ -1,13 +1,13 @@
 'use strict';
 
 import plugConstants from './plug-constants';
-import systemConstants from '../shared/constants';
+import systemConstants from './constants';
 
 const Redis = require('redis');
 const _ = require('underscore');
 
 // Interfaces
-import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from '../shared/types';
+import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from './types';
 
 class PlugBot {
   private sub: any;

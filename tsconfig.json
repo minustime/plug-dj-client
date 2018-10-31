@@ -6,7 +6,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "moduleResolution": "node",
-    "inlineSources": true,
+    "resolveJsonModule": true,
+    "inlineSources": true, 
     "watch": false
   },
   "include": ["src/**/*"],

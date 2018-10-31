@@ -1,8 +1,0 @@
-node_modules
-dist
-*.log
-*.swp
-*.swo
-env_make
-config.json
-.DS_Store
