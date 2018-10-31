@@ -1,7 +1,6 @@
 *
 !src
 !docker
-!config
 !package.json
 !tsconfig.json
 !yarn.lock
