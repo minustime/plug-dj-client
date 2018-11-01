@@ -4,7 +4,6 @@ import PlugBot from './plug-bot';
 import PlugApi = require('./plug-api/');
 import config from './config/config';
 import winston = require('winston');
-import { eventNames } from 'cluster';
 
 // Setup logging
 const logger = new winston.Logger({
@@ -17,18 +16,15 @@ const logger = new winston.Logger({
   ]
 });
 
-const chromeConfig = {
+const puppeteerOptions = {
   "headless": true
 };
-console.log
-if(config.dockerized === true) {
-  chromeConfig['executablePath'] = 'google-chrome-unstable';
-  chromeConfig['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+
+if(config.puppeteer.contained) {
+  puppeteerOptions['executablePath'] = 'google-chrome-unstable';
+  puppeteerOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
 }
 
-const plugApi = new PlugApi({
-  headless: true,
-  ...chromeConfig
-});
+const plugApi = new PlugApi(puppeteerOptions);
 
 new PlugBot(config, logger, plugApi);

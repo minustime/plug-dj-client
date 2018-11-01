@@ -1,8 +1,9 @@
 const env = process.env;
-console.log(env.DOCKERIZED)
-console.log(env)
+
 export default {
-    "dockerized": env.DOCKERIZED || false,
+    "puppeteer": {
+        "contained": env.hasOwnProperty('PUPPETEER_CONTAINED') ? env.PUPPETEER_CONTAINED === 'true' : false,
+    },
     "plug": {
         "username": env.PLUG_USERNAME || "",
         "password": env.PLUG_PASSWORD || "",
