@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module to connect to Plug.dj and interact with it's JavaScript based API. 
+ * Module to connect to Plug.dj and interact with it's JavaScript based API.
  */
 
 const EventEmitter = require('events');
@@ -33,7 +33,7 @@ class PlugApi extends EventEmitter {
       ['USER_LEAVE', 'userLeave'],
       ['USER_SKIP', 'userSkip'],
       ['VOTE_UPDATED', 'voteUpdate'],
-      ['WAIT_LIST_UPDATE', 'waitListUpdate']
+      ['WAIT_LIST_UPDATE', 'waitListUpdate'],
     ];
     this.PLUG_API_METHODS = [
       'chatLog',
@@ -72,7 +72,7 @@ class PlugApi extends EventEmitter {
       'moderateUnbanUser',
       'moderateUnmuteUser',
       'sendChat',
-      'setVolume'
+      'setVolume',
     ];
     this.puppeteerOptions = puppeteerOptions;
     this.mirrorPlugApiMethods();
@@ -94,7 +94,7 @@ class PlugApi extends EventEmitter {
           .required(),
         roomId: Joi.string()
           .min(1)
-          .required()
+          .required(),
       };
 
       const validation = Joi.validate(options, optionsSchema);
@@ -109,16 +109,14 @@ class PlugApi extends EventEmitter {
           await this.visitRoom(options.roomId);
           resolve();
         } catch (err) {
-          reject(
-            'Could not login or visit room, check credentials and/or room name'
-          );
+          reject('Could not login or visit room, check credentials and/or room name');
         }
       }
     });
   }
 
   /**
-   * Logs in to Plug.dj 
+   * Logs in to Plug.dj
    * @param {string} username - Plug.dj username
    * @param {string} password - Plug.dj password
    */
@@ -131,10 +129,7 @@ class PlugApi extends EventEmitter {
             if (window._csrf) {
               const xhr = new XMLHttpRequest();
               xhr.open('POST', loginUrl, true);
-              xhr.setRequestHeader(
-                'Content-Type',
-                'application/json; charset=UTF-8'
-              );
+              xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
               xhr.onload = () => {
                 if (xhr.readyState === xhr.DONE) {
                   if (xhr.status === 200) {
@@ -148,7 +143,7 @@ class PlugApi extends EventEmitter {
                 JSON.stringify({
                   csrf: window._csrf,
                   email: username,
-                  password: password
+                  password: password,
                 })
               );
               clearInterval(interval);
@@ -163,21 +158,16 @@ class PlugApi extends EventEmitter {
   }
 
   /**
-   * Navigate to the Plug.dj room 
+   * Navigate to the Plug.dj room
    * @param {string} roomId - Id of the Plug.dj room
    */
   async visitRoom(roomId) {
     await this.page.goto(`https://plug.dj/${roomId}`, { waitUntil: 'load' });
-    await this.page.exposeFunction('__sendout', (eventType, data) =>
-      this.emit(eventType, data)
-    );
+    await this.page.exposeFunction('__sendout', (eventType, data) => this.emit(eventType, data));
     await this.page.evaluate(plugApiEventNames => {
       return new Promise((resolve, reject) => {
         const interval = window.setInterval(() => {
-          if (
-            typeof window.API !== 'undefined' &&
-            window.API.getUsers().length
-          ) {
+          if (typeof window.API !== 'undefined' && window.API.getUsers().length) {
             clearInterval(interval);
 
             // Register event handlers

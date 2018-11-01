@@ -16,6 +16,11 @@
   "devDependencies": {
     "@types/node": "10.12.1",
     "eslint": "5.8.0",
+    "husky": "^1.1.2",
+    "lint-staged": "^8.0.4",
+    "prettier": "^1.14.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
     "typescript": "3.1.4"
   },
   "scripts": {
@@ -24,6 +29,18 @@
     "watch": "yarn process-js & yarn watch-ts",
     "build": "cpx ./src/plug-api/index.js dist/plug-api/ & tsc",
     "start": "source .env; node dist"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "tslint -c tslint.json",
+      "prettier --write",
+      "git add"
+    ]
   },
   "engines": {
     "node": "10.x.x"

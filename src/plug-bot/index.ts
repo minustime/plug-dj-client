@@ -30,13 +30,13 @@ class PlugBot {
       [plugConstants.USER_LEAVE, this.handleUserLeave],
       [plugConstants.USER_SKIP, this.handleUserSkip],
       [plugConstants.VOTE_UPDATED, this.handleVoteUpdated],
-      [plugConstants.WAIT_LIST_UPDATE, this.handleWaitlistUpdate]
+      [plugConstants.WAIT_LIST_UPDATE, this.handleWaitlistUpdate],
     ]);
 
     // Register server event handlers
     this.serverRequests = new Map([
       [systemConstants.ROOM_UPDATE, this.handleRoomUpdateRequest],
-      [systemConstants.CHAT, this.handleChatRequest]
+      [systemConstants.CHAT, this.handleChatRequest],
     ]);
 
     this.sub = Redis.createClient(config.redis.port, config.redis.host);
@@ -46,7 +46,6 @@ class PlugBot {
   }
 
   private async init(username: string, password: string, roomId: string) {
-
     this.logger.log('info', 'Connecting to room: %s', roomId);
 
     // Connect to plug and the room
@@ -54,7 +53,7 @@ class PlugBot {
       await this.plugApi.connect({
         roomId,
         username,
-        password
+        password,
       });
 
       // Get room data
@@ -76,7 +75,6 @@ class PlugBot {
           // Notify 'ready'
           this.sendToServer(systemConstants.BOT_JOIN, roomSnapshot);
           this.logger.log('info', 'Connected to room: %s', roomId);
-          
         } catch (err) {
           this.logger.log('error', 'Error, could not subscribe to room events: %s', err);
         }
@@ -174,7 +172,7 @@ class PlugBot {
     */
     const content: any = {
       dj: this.normalizeUser(data.dj),
-      media: this.normalizeMedia(data.media)
+      media: this.normalizeMedia(data.media),
     };
     this.sendToServer(systemConstants.SONG_TRANSITION, content);
   }
@@ -212,7 +210,7 @@ class PlugBot {
     }
     */
     const content: any = {
-      user: this.normalizeUser(data.user)
+      user: this.normalizeUser(data.user),
     };
     this.sendToServer(systemConstants.SONG_CURATE, content);
   }
@@ -247,7 +245,7 @@ class PlugBot {
     }
     */
     const content: any = {
-      user: this.normalizeUser(data)
+      user: this.normalizeUser(data),
     };
     this.sendToServer(plugConstants.USER_JOIN, content);
   }
@@ -285,7 +283,7 @@ class PlugBot {
     };
     */
     const content: any = {
-      user: this.normalizeUser(data.user)
+      user: this.normalizeUser(data.user),
     };
     this.sendToServer(plugConstants.USER_LEAVE, content);
   }
@@ -322,7 +320,7 @@ class PlugBot {
     */
     const content: any = {
       user: this.normalizeUser(data.user),
-      vote: data.vote
+      vote: data.vote,
     };
     this.sendToServer(systemConstants.USER_VOTE, content);
   }
@@ -373,7 +371,7 @@ class PlugBot {
     ]
     */
     const content: any = {
-      waitlist: this.normalizeUsers(data)
+      waitlist: this.normalizeUsers(data),
     };
     this.sendToServer(systemConstants.WAITLIST_UPDATE, content);
   }
@@ -398,7 +396,7 @@ class PlugBot {
     const content = {
       chatId: data.cid,
       user: this.normalizeUser(user),
-      message: data.message
+      message: data.message,
     };
     this.sendToServer(plugConstants.CHAT, content);
   }
@@ -408,7 +406,7 @@ class PlugBot {
     const content = {
       chatId: data.cid,
       user: this.normalizeUser(user),
-      message: data.message
+      message: data.message,
     };
     this.sendToServer(plugConstants.CHAT_COMMAND, content);
   }
@@ -442,7 +440,7 @@ class PlugBot {
         avatarID: user.avatarID,
         badge: user.badge,
         level: user.level,
-        language: user.language
+        language: user.language,
       };
     } catch (err) {
       this.logger.log('error', 'Could not normalize user: %s', err);
@@ -473,7 +471,7 @@ class PlugBot {
         title: media.title,
         duration: media.duration,
         format: media.format,
-        image: media.image
+        image: media.image,
       };
     } catch (err) {
       this.logger.log('error', 'Could not normalize media: %s', err);
@@ -485,7 +483,7 @@ class PlugBot {
       dj: this.normalizeUser(await this.plugApi.getDJ()),
       waitlist: this.normalizeUsers(await this.plugApi.getWaitList()),
       audience: this.normalizeUsers(await this.plugApi.getAudience()),
-      media: this.normalizeMedia(await this.plugApi.getMedia())
+      media: this.normalizeMedia(await this.plugApi.getMedia()),
     };
   }
 
@@ -525,7 +523,7 @@ class PlugBot {
       siteId: systemConstants.PLUG,
       roomId: this.roomId,
       botId: this.botId,
-      content: content
+      content: content,
     };
 
     this.logger.log('info', 'Bot publishing message: %s', JSON.stringify(message));
