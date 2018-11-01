@@ -7,7 +7,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "inlineSources": true, 
+    "inlineSources": true,
     "watch": false
   },
   "include": ["src/**/*"],

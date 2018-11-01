@@ -11,16 +11,16 @@ const logger = new winston.Logger({
     new winston.transports.Console({
       timestamp: () => new Date(),
       prettyPrint: true,
-      colorize: false
-    })
-  ]
+      colorize: false,
+    }),
+  ],
 });
 
 const puppeteerOptions = {
-  "headless": true
+  headless: true,
 };
 
-if(config.puppeteer.contained) {
+if (config.puppeteer.contained) {
   puppeteerOptions['executablePath'] = 'google-chrome-unstable';
   puppeteerOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
 }

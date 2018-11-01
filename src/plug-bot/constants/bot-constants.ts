@@ -21,5 +21,5 @@ export default Object.freeze({
   ERROR: 'ERROR',
   PLUG: 'plug',
   PUBSUB_CLIENT_EVENT: 'woots:client:event',
-  PUBSUB_SERVER_EVENT: 'woots:server:event'
+  PUBSUB_SERVER_EVENT: 'woots:server:event',
 });
