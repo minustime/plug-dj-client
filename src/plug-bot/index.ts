@@ -527,6 +527,7 @@ class PlugBot {
       botId: this.botId,
       content: content
     };
+
     this.logger.log('info', 'Bot publishing message: %s', JSON.stringify(message));
     this.pub.publish(systemConstants.PUBSUB_CLIENT_EVENT, JSON.stringify(message));
   }

@@ -6,6 +6,7 @@ services:
     env_file: 
         - .env
     environment:
+      - PUPPETEER_CONTAINED=true
       - REDIS_HOST=redis
   redis:
     image: redis:latest

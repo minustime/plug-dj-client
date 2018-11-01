@@ -5,14 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "woots-client-node",
+      "name": "plug-dj-client",
       "type": "node",
       "request": "launch",
       "program": "${workspaceRoot}/dist/index.js",
       "cwd": "${workspaceRoot}",
       "outFiles": ["${workspaceRoot}/dist/**/*.js"],
       "sourceMaps": true,
-      "env": {}
+      "envFile": "${workspaceRoot}/.env"
     }
   ]
 }

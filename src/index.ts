@@ -16,10 +16,15 @@ const logger = new winston.Logger({
   ]
 });
 
-const plugApi = new PlugApi({
-  headless: true,
-  executablePath: 'google-chrome-unstable',
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
-});
+const puppeteerOptions = {
+  "headless": true
+};
+
+if(config.puppeteer.contained) {
+  puppeteerOptions['executablePath'] = 'google-chrome-unstable';
+  puppeteerOptions['args'] = ['--no-sandbox', '--disable-setuid-sandbox'];
+}
+
+const plugApi = new PlugApi(puppeteerOptions);
 
 new PlugBot(config, logger, plugApi);
