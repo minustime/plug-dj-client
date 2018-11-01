@@ -1,5 +1,5 @@
 {
-  "name": "woots-node-client",
+  "name": "plug-dj-client",
   "version": "0.1.2",
   "description": "",
   "main": "dist/index.js",
