@@ -28,3 +28,23 @@ $ make build
 ```
 $ make up
 ```
+
+## Development
+
+1. Install dependencies
+
+```
+$ npm install
+```
+
+2. Watch for file changes
+
+```
+$ npm run watch
+```
+
+3. Start the project
+
+```
+$ npm run start
+```

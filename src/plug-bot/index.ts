@@ -3,8 +3,7 @@
 import plugConstants from './constants/plug-constants';
 import systemConstants from './constants/bot-constants';
 
-const Redis = require('redis');
-const _ = require('underscore');
+import Redis = require('redis');
 
 // Interfaces
 import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from './types/bot.types';
@@ -12,13 +11,15 @@ import { RoomSnapshot, ClientRequest, ServerRequest, CommonUser } from './types/
 class PlugBot {
   private sub: any;
   private pub: any;
-  private plugApiEvents;
-  private roomEvents;
-  private serverRequests;
-  private roomId;
-  private botId;
+  private roomEvents: Map<string, any>;
+  private serverRequests: Map<string, (m: string) => void>;
+  private roomId: string;
+  private botId: string;
 
   constructor(private config: any, private logger: any, private plugApi: any) {
+    this.roomId = '';
+    this.botId = '';
+
     // Register room events handlers
     this.roomEvents = new Map([
       [plugConstants.CHAT, this.handleChatEvent],
@@ -51,9 +52,9 @@ class PlugBot {
     // Connect to plug and the room
     try {
       await this.plugApi.connect({
+        password,
         roomId,
         username,
-        password,
       });
 
       // Get room data
@@ -64,13 +65,15 @@ class PlugBot {
 
         // Subscribe to room events
         try {
-          for (let [event, handler] of this.roomEvents) {
-            this.plugApi.on(event, data => handler.call(this, data));
+          for (const [event, handler] of this.roomEvents) {
+            this.plugApi.on(event, (data: string) => handler.call(this, data));
           }
 
           // Subscribe to bot server events
           this.sub.subscribe(systemConstants.PUBSUB_SERVER_EVENT);
-          this.sub.on('message', (channel, data) => this.handleServerEvent(channel, data));
+          this.sub.on('message', (channel: string, data: string) =>
+            this.handleServerEvent(channel, data)
+          );
 
           // Notify 'ready'
           this.sendToServer(systemConstants.BOT_JOIN, roomSnapshot);
@@ -86,9 +89,7 @@ class PlugBot {
     }
   }
 
-  //------------------------
   // PLUG.DJ EVENT HANDLERS
-  //------------------------
 
   /**
    * Handles a song transition
@@ -395,8 +396,8 @@ class PlugBot {
     const user = await this.plugApi.getUser(data.uid);
     const content = {
       chatId: data.cid,
-      user: this.normalizeUser(user),
       message: data.message,
+      user: this.normalizeUser(user),
     };
     this.sendToServer(plugConstants.CHAT, content);
   }
@@ -405,8 +406,8 @@ class PlugBot {
     const user = await this.plugApi.getUser(data.uid);
     const content = {
       chatId: data.cid,
-      user: this.normalizeUser(user),
       message: data.message,
+      user: this.normalizeUser(user),
     };
     this.sendToServer(plugConstants.CHAT_COMMAND, content);
   }
@@ -419,32 +420,23 @@ class PlugBot {
     this.logger.log('info', 'HandleFriendJoin called with: %s', JSON.stringify(data));
   }
 
-  //---------
   // HELPERS
-  //---------
 
   /**
    * Standarizes the name of the user object parameters
    * @param {PlugUser} user - Plug.dj user object
    */
   private normalizeUser(user: any): CommonUser {
-    if (!user) {
-      return undefined;
-    }
-    try {
-      return {
-        id: String(user.id),
-        username: user.username,
-        dateJoined: user.joined,
-        permission: user.role,
-        avatarID: user.avatarID,
-        badge: user.badge,
-        level: user.level,
-        language: user.language,
-      };
-    } catch (err) {
-      this.logger.log('error', 'Could not normalize user: %s', err);
-    }
+    return {
+      avatarID: user.avatarID,
+      badge: user.badge,
+      dateJoined: user.joined,
+      id: String(user.id),
+      language: user.language,
+      level: user.level,
+      permission: user.role,
+      username: user.username,
+    };
   }
 
   /**
@@ -452,7 +444,7 @@ class PlugBot {
    * @param {PlugUser} users - Array of Plug.dj user objects
    */
   private normalizeUsers(users: any[]): CommonUser[] {
-    return users.map(user => this.normalizeUser(user));
+    return users.map(user => (user ? this.normalizeUser(user) : ({} as CommonUser)));
   }
 
   /**
@@ -465,13 +457,13 @@ class PlugBot {
     }
     try {
       return {
-        id: media.id,
-        cid: media.cid,
         author: media.author,
-        title: media.title,
+        cid: media.cid,
         duration: media.duration,
         format: media.format,
+        id: media.id,
         image: media.image,
+        title: media.title,
       };
     } catch (err) {
       this.logger.log('error', 'Could not normalize media: %s', err);
@@ -480,22 +472,20 @@ class PlugBot {
 
   private async getRoomSnapshot() {
     return {
-      dj: this.normalizeUser(await this.plugApi.getDJ()),
-      waitlist: this.normalizeUsers(await this.plugApi.getWaitList()),
       audience: this.normalizeUsers(await this.plugApi.getAudience()),
+      dj: this.normalizeUser(await this.plugApi.getDJ()),
       media: this.normalizeMedia(await this.plugApi.getMedia()),
+      waitlist: this.normalizeUsers(await this.plugApi.getWaitList()),
     };
   }
 
-  //------------------------
   // HANDLE SERVER REQUESTS
-  //------------------------
 
   /**
    * Sends a chat message to the room
    * @param {string} message
    */
-  private handleChatRequest(message) {
+  private handleChatRequest(message: string) {
     // this.plugApi.sendChat(message);
   }
 
@@ -519,11 +509,11 @@ class PlugBot {
 
   private sendToServer(eventType: string, content: any) {
     const message: ClientRequest = {
-      eventType,
-      siteId: systemConstants.PLUG,
-      roomId: this.roomId,
       botId: this.botId,
-      content: content,
+      content,
+      eventType,
+      roomId: this.roomId,
+      siteId: systemConstants.PLUG,
     };
 
     this.logger.log('info', 'Bot publishing message: %s', JSON.stringify(message));
